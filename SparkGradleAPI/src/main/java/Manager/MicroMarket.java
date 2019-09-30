@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class MicroMarket {
 
     private ArrayList<Product> ProductList = new ArrayList<Product>();
+    private int MicroMarketId;
     private Date OrderHoursStart;
     private Date OrderHoursEnd;
     private Date OpeningHoursStart;
@@ -136,5 +137,13 @@ public class MicroMarket {
 
     public void setActive(int active) {
         Active = active;
+    }
+
+    public int getMicroMarketId() {
+        return MicroMarketId;
+    }
+
+    public void setMicroMarketId(int microMarketId) {
+        MicroMarketId = microMarketId;
     }
 }

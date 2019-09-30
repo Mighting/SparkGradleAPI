@@ -1,13 +1,12 @@
 package DB;
 
 import java.lang.reflect.Field;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 
 public class MysqlCon {
     Connection con;
+    PreparedStatement statement;
 
     public MysqlCon() {
         try {
@@ -20,45 +19,55 @@ public class MysqlCon {
         }
     }
 
-    public Object select(Object object, ArrayList<String> parameter) {
+    public ResultSet sql(String sql) {
         try {
-            String sql = "";
-
-            Class c = object.getClass();
-            Field[] fields = c.getDeclaredFields();
-            for(int i = 0; i < fields.length; i++){
-                sql += fields[i].toString();
-                System.out.println(fields[i]);
-            }
-           // System.out.println(sql);
-            //System.out.println("test");
-
-            //String tempOutputParameter = loopOutputParameter(outputParameter, ",");
-            //String tempParameter = loopOutputParameter(outputParameter, " where ");
-
-            //sql = String.format("SELECT %s FROM %s%s", tempOutputParameter, table, tempParameter);
-            //System.out.println(sql);
-
-
-            //String sqlString = String.format("SELECT %a FROM %b", tempParameter, table);
-            /*PreparedStatement statement = con.prepareStatement(sqlString);
-            ResultSet rs = statement.executeQuery();
-
-            while (rs.next()){
-                System.out.println(rs.getString("Streetname"));
-            }*/
-
-
-            //Debug.println("sql string", sqlString);
-            return null;
-        } catch (Exception e) {
-            //SQLException
+            statement = con.prepareStatement(sql);
+            return statement.executeQuery();
+        } catch (SQLException e) {
             e.printStackTrace();
             return null;
         }
     }
 
-    private String OLDloopOutputParameter(ArrayList<String> outputParameter, String seperator) {
+    public Object select(Object object, ArrayList<String> parameter) {
+        try {
+            String sql = "SELECT ";
+
+            Class c = object.getClass();
+            Field[] fields = c.getDeclaredFields();
+            for (int i = 0; i < fields.length; i++) {
+                if (!fields[i].toString().contains("ArrayList")) {
+                    sql += fields[i].getName() + ",";
+                }
+            }
+            sql = removeLastWord(sql, ",".length());
+            sql += " FROM " + object.getClass().getSimpleName();
+
+            statement = con.prepareStatement(sql);
+            if (parameter != null) {
+                //TODO make parameter
+                //statement.setString(1, "MicroMarketId");
+            }
+            ResultSet rs = statement.executeQuery();
+            ResultSetMetaData metadata = rs.getMetaData();
+            int columnCount = metadata.getColumnCount();
+
+            //TODO a smart way to convert rs.next() to object
+            while (rs.next()) {
+                String row = "";
+                for (int i = 1; i <= columnCount; i++) {
+                    row += rs.getString(i) + ", ";
+                }
+                System.out.println(row);
+            }
+            return null;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    /*private String OLDloopOutputParameter(ArrayList<String> outputParameter, String seperator) {
         String tempParameter = "";
         if (seperator == ","){
             tempParameter = "*";
@@ -70,7 +79,7 @@ public class MysqlCon {
             tempParameter = removeLastWord(tempParameter, seperator.length());
         }
         return tempParameter;
-    }
+    }*/
 
     private String removeLastWord(String str, int length) {
         return str.substring(0, str.length() - length);
