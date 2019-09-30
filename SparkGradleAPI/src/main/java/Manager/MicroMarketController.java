@@ -14,7 +14,7 @@ import static spark.Spark.*;
 public class MicroMarketController {
     public MicroMarketController() {
         MysqlCon a = new MysqlCon();
-        a.connectToDB();
+        a.select(new MicroMarket(), null);
 
 
         get("/MicroMarket", new Route() {

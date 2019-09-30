@@ -10,7 +10,6 @@ public class MicroMarketDAOImp implements StandardDAO<MicroMarket> {
 
     public MicroMarketDAOImp() {
         MysqlCon mysqlCon = new MysqlCon();
-        mysqlCon = (MysqlCon) mysqlCon.connectToDB();
     }
 
     @Override
