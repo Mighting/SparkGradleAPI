@@ -13,8 +13,22 @@ import static spark.Spark.*;
 
 public class MicroMarketController {
     public MicroMarketController() {
-        MysqlCon a = new MysqlCon();
-        a.select(new MicroMarket(), null);
+        //MysqlCon a = new MysqlCon();
+        //a.select(new MicroMarket(), null);
+
+        MicroMarket mm = new MicroMarket();
+
+        mm.setFirstName("Rasmus");
+
+        JsonConverter jc = new JsonConverter();
+
+        String sc = jc.ObjectToString(mm);
+
+        System.out.println(sc);
+
+
+
+        System.out.println(jc.StringToObject(sc,MicroMarket.class));
 
 
         get("/MicroMarket", new Route() {
@@ -32,10 +46,5 @@ public class MicroMarketController {
             String q = req.body();
             return q;
         });
-    }
-
-    public MicroMarket JsonToObject(String json){
-        Gson gson = new GsonBuilder().setDateFormat("yyyy-MM-dd'T'HH:mm:ss").create();
-        return gson.fromJson(json, MicroMarket.class);
     }
 }
