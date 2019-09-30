@@ -1,23 +1,17 @@
-import static spark.Spark.*;
+import Manager.MicroMarketController;
+import spark.Request;
 
 import java.util.Iterator;
-import java.util.Map;
 import java.util.Set;
-
-
-import spark.Request;
-import spark.Route;
 
 public class Main {
 
-	public static void main(String[] args) 
+	public static void main(String[] args)
 	{
 		//This is test
 		//get("/MM",(req,res) -> doStuff(req));
-		new TestController();
-		
-		//post("/MM", (req,res) -> doStuff(req));
-		
+		new MicroMarketController();
+
 	}
 	
 
